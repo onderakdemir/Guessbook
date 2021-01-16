@@ -1,0 +1,168 @@
+﻿@model List<GuessBook.Web.ViewModels.QuestionViewModel>
+
+@{
+    Layout = null;
+}
+
+<div class="row justify-content-center">
+    @foreach (var item in Model)
+    {
+        <div class="col-6 col-lg-3 col-md-4 col-sm-6 col-xl-3 p-2 text-center">
+            <div class="card my-2">
+                <img src="@item.Questions.PhotoUrl" class="card-img-top" />
+                @switch (item.Questions.QType)
+                {
+                    case 1:
+                        <div class="card-body">
+                            <p>@item.Questions.Text</p>
+                            <div class="row justify-content-center m-0">
+                                @foreach (var opt in item.Options)
+                                {
+                                    <div class="card col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 px-1 my-1 @(item.UserOptions.Contains(opt.Id) ? "selectAnswer" : "")" name="option" id="@opt.Id">
+                                        <div class="row imageDiv">
+                                            <img class="card-img-top" src="@opt.Photo" alt="">
+                                        </div>
+                                        <div class="card-body p-0">
+                                            <p class="card-text">@opt.Text</p>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        break;
+                    case 2:
+                        <div class="card-body">
+                            <p>@item.Questions.Text</p>
+                            <div class="row">
+                                <div class="col-6 sortableBoxes">
+                                    <span><b>Unused</b></span>
+                                    <ul class="list-group mixedList mt-1">
+                                        @foreach (var opt in item.Options)
+                                        {
+                                            if (!(item.UserOptions.Contains(opt.Id)))
+                                            {
+                                                <li class="card h-auto border-0 p-1" Id="@opt.Id">
+                                                    <img class="card-img-top" src="@opt.Photo" alt="">
+                                                    <p class="card-text">@opt.Text</p>
+                                                </li>
+                                            }
+                                        }
+                                    </ul>
+                                </div>
+                                <div class="col-6 sortableBoxes">
+                                    <span><b>Yours</b></span>
+                                    <ul class="list-group resultList mt-1">
+                                        @foreach (var opt in item.Options)
+                                        {
+                                            if ((item.UserOptions.Contains(opt.Id)))
+                                            {
+                                                <li class="card h-auto border-0 p-1" Id="@opt.Id">
+                                                    <img class="card-img-top" src="@opt.Photo" alt="">
+                                                    <p class="card-text">@opt.Text</p>
+                                                </li>
+                                            }
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        break;
+                    case 3:
+                        <div class="card-body">
+                            <p>@item.Questions.Text</p>
+                            <input hidden id="questionId" value="@item.Questions.Id" />
+                            @foreach (var opt in item.Options)
+                            {
+                                <div class="text-center m-1 p-2 @(item.UserOptions.Contains(opt.Id) ? "selectAnswer" : "border")" name="option" id="@opt.Id">
+                                    @opt.Text
+                                </div>
+                            }
+                        </div>
+                        break;
+                    case 4:
+                        <div class="card-body">
+                            <p>@item.Questions.Text</p>
+                            <div class="row">
+                                <div class="col-6 sortableBoxes">
+                                    <span><b>Unused</b></span>
+                                    <ul class="list-group sortableText mixedList mt-1">
+                                        @foreach (var opt in item.Options)
+                                        {
+                                            if (!(item.UserOptions.Contains(opt.Id)))
+                                            {
+                                                <li class="list-group-item h-auto" Id="@opt.Id">@opt.Text</li>
+                                            }
+                                        }
+                                    </ul>
+                                </div>
+                                <div class="col-6 sortableBoxes">
+                                    <span><b>Yours</b></span>
+                                    <ul class="list-group sortableText resultList mt-1">
+                                        @foreach (var opt in item.Options)
+                                        {
+                                            if ((item.UserOptions.Contains(opt.Id)))
+                                            {
+                                                <li class="list-group-item h-auto" Id="@opt.Id">@opt.Text</li>
+                                            }
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        break;
+                    case 5:
+                        <div class="card-body">
+                            <p>@item.Questions.Text</p>
+                            <div>
+                                <input type="text" id="profilePageSlider" value="@item.UserOptions.FirstOrDefault()" />
+                            </div>
+                        </div>
+                        <input id="type5MinSelect" hidden value="@item.Questions.MinSelect">
+                        <input id="type5MaxSelect" hidden value="@item.Questions.MaxSelect">
+                        <input id="type5Increment" hidden value="@item.Questions.IncrementSelect">
+                        break;
+                }
+
+            </div>
+            <div class="modelCount text-center" data-modelCount=@Model.Count()>
+                <h3 style="margin-top: 0px" class="description-text  ">
+                    <p class="liveCount-@Model.IndexOf(item)" id="countDown-@item.Questions.Id" style="margin-bottom: 0px" data-expiredtime="@item.Questions.EndTime.ToString(" yyyy/MM/dd HH:mm:ss")" data-modelCount=@Model.Count()></p>
+                    <p style="font-size: 16px; color: gray">M &emsp;D &emsp;H &emsp;M &emsp;S</p>
+                </h3>
+            </div>
+        </div>
+    }
+
+</div>
+
+@*Left Sidebar*@
+<a href="#" class=" ml-4 profileCategoriesBtn" onclick="openNav()"><i class="fa fa-bars" aria-hidden="true"></i></a>
+<div id="profileCategoriesMenu" class="sidenav bg-dark">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+    <a asp-controller="Profile" asp-action="GetQuestionsWithQType" asp-route-type="0">Alls</a>
+    <a asp-controller="Profile" asp-action="GetQuestionsWithQType" asp-route-type="1">QType 1</a>
+    <a asp-controller="Profile" asp-action="GetQuestionsWithQType" asp-route-type="2">QType 2</a>
+    <a asp-controller="Profile" asp-action="GetQuestionsWithQType" asp-route-type="3">QType 3</a>
+    <a asp-controller="Profile" asp-action="GetQuestionsWithQType" asp-route-type="4">QType 4</a>
+    <a asp-controller="Profile" asp-action="GetQuestionsWithQType" asp-route-type="5">QType 5</a>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

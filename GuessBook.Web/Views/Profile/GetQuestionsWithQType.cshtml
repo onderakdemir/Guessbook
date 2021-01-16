@@ -1,0 +1,15 @@
+﻿@{
+    ViewData["Title"] = "Profile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    @if (ViewBag.QuestionType == 0)
+    {
+        @await Component.InvokeAsync("ProfilePage")
+    }
+    else
+    {
+        @await Component.InvokeAsync("ProfilePage", ViewBag.QuestionType)
+    }
+</div>

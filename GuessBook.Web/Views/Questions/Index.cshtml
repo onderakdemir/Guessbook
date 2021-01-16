@@ -1,0 +1,15 @@
+﻿@{
+    ViewData["Title"] = "Questions";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container text-center">
+    <!-- Page Features -->
+    <div class="alert alert-danger alert-dismissible d-none" id="alertBox">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <span id="alertMessage"></span>
+    </div>
+    <div class="container">
+        @await Component.InvokeAsync("Questions")
+    </div>
+</div>

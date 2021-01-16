@@ -1,0 +1,45 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using GuessBook.EF.Models
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
+        @*<span class="mr-2 d-none d-md-inline text-white small">@User.Identity.Name</span>*@
+        <span class="mr-2 text-white small">@User.Identity.Name</span>
+
+        <img class="img-profile rounded-circle" src="~/images/joker.jpg" style="height: 3em; width: 3em;"/>
+        @*<i class="fa fa-angle-down"></i>*@
+    </a>
+    <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+        <a class="dropdown-item nav-link text-dark" id="profile" asp-area="" asp-controller="Profile" asp-action="Index" title="Profile">
+            <i class="fas fa-user fa-sm fa-fw mr-2 text-dark-400"></i>
+            Profile
+        </a>
+        <a class="dropdown-item nav-link text-dark" id="manage" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
+            <i class="fa fa-cog fa-sm fa-fw mr-2 text-dark-400"></i>
+            Settings
+        </a>
+        <div class="dropdown-divider"></div>
+        <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new {area = ""})">
+            <button id="logout" type="submit" class="nav-link btn btn-link text-dark">
+                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-dark-400"></i>
+                Logout
+            </button>
+        </form>
+    </div>
+
+
+}
+else
+{
+    <li class="nav-link">
+        <a class="nav-link text-light" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
+    </li>
+    <li class="nav-link">
+        <a class="nav-link text-light" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
+    </li>
+}
