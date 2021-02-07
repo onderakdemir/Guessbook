@@ -1,0 +1,63 @@
+﻿
+
+/************************** effect zoom out *************************/
+.imageDiv {
+    display: contents;
+    text-align: center;
+}
+
+
+.img-zoom-out img {
+    transition: all .2s ease-in-out;
+    -webkit-transition: all .2s ease-in-out;
+    -moz-transition: all .2s ease-in-out;
+    -ms-transition: all .2s ease-in-out;
+    -o-transition: all .2s ease-in-out;
+}
+
+.img-zoom-out:hover img {
+    transform: scale(0.9);
+    -webkit-transform: scale(0.9);
+    -moz-transform: scale(0.9);
+    -ms-transform: scale(0.9);
+    -o-transform: scale(0.9)
+}
+/***********************************************************************/
+
+
+
+
+/************************ text div effect zoom out **********************/
+
+.text-zoom-out {
+    transition: all .2s ease-in-out;
+    -webkit-transition: all .2s ease-in-out;
+    -moz-transition: all .2s ease-in-out;
+    -ms-transition: all .2s ease-in-out;
+    -o-transition: all .2s ease-in-out;
+}
+
+.text-zoom-out:hover {
+    transform: scale(0.9);
+    -webkit-transform: scale(0.9);
+    -moz-transform: scale(0.9);
+    -ms-transform: scale(0.9);
+    -o-transform: scale(0.9)
+}
+
+/*************************************************************************/
+
+
+
+
+
+/****************** Add green border for seleted options *****************/
+.selectAnswer {
+    border: 2px solid green;
+}
+
+.answers {
+    border: 0.5px solid gray;
+    cursor: pointer;
+}
+/***************************************************************************/

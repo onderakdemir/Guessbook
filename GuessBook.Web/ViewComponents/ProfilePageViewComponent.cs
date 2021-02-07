@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using GuessBook.Business.Managers;
-using GuessBook.EF.Entities;
 using GuessBook.EF.Models;
 using GuessBook.Web.ViewModels;
 using Microsoft.AspNetCore.Identity;

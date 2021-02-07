@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text.Encodings.Web;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using GuessBook.EF.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
 namespace GuessBook.Web.Areas.Identity.Pages.Account
@@ -19,14 +19,16 @@ namespace GuessBook.Web.Areas.Identity.Pages.Account
     public class LoginModel : PageModel
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IMemoryCache _cache;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
 
         public LoginModel(SignInManager<ApplicationUser> signInManager,
             ILogger<LoginModel> logger,
-            UserManager<ApplicationUser> userManager)
+            UserManager<ApplicationUser> userManager, IMemoryCache cache)
         {
             _userManager = userManager;
+            _cache = cache;
             _signInManager = signInManager;
             _logger = logger;
         }
@@ -37,6 +39,7 @@ namespace GuessBook.Web.Areas.Identity.Pages.Account
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
 
         public string ReturnUrl { get; set; }
+        public string GuestionId { get; set; }
 
         [TempData]
         public string ErrorMessage { get; set; }
@@ -60,8 +63,10 @@ namespace GuessBook.Web.Areas.Identity.Pages.Account
             public bool RememberMe { get; set; }
         }
 
-        public async Task OnGetAsync(string returnUrl = null)
+        public async Task OnGetAsync(string returnUrl = null, string questionId = null)
         {
+            GuestionId = questionId;
+
             if (!string.IsNullOrEmpty(ErrorMessage))
             {
                 ModelState.AddModelError(string.Empty, ErrorMessage);
@@ -77,7 +82,7 @@ namespace GuessBook.Web.Areas.Identity.Pages.Account
             ReturnUrl = returnUrl;
         }
 
-        public async Task<IActionResult> OnPostAsync(string returnUrl = null)
+        public async Task<IActionResult> OnPostAsync(string returnUrl = null, string questionId = null)
         {
             returnUrl = returnUrl ?? Url.Content("~/");
 
@@ -88,7 +93,6 @@ namespace GuessBook.Web.Areas.Identity.Pages.Account
                 if (user != null)
                     Input.UserName = user.UserName;
 
-
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager.PasswordSignInAsync(Input.UserName, Input.Password, Input.RememberMe, lockoutOnFailure: true);
@@ -96,6 +100,11 @@ namespace GuessBook.Web.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
+                    if (questionId != null)
+                    {
+                        var userId = _userManager.Users.FirstOrDefault(c=>c.UserName == Input.UserName || c.Email == Input.UserName)?.Id;
+                        _cache.Set(userId, questionId, TimeSpan.FromMinutes(30));
+                    }
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)

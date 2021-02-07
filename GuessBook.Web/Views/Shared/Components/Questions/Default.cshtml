@@ -4,132 +4,158 @@
 @{
     Layout = null;
 }
-<div class="row mt-1 justify-content-center" id="questionCard">
-    <div class="col-sm-12 col-md-9 col-lg-9 col-xl-6">
-        <div class="card my-2">
-            <img src="@Model.Questions.PhotoUrl" class="card-img-top" />
-            @switch (Model.Questions.QType)
-            {
-                case 1:
-                    <div class="card-body">
-                        <p>@Model.Questions.Text</p>
-                        <input hidden id="questionId" value="@Model.Questions.Id" />
-                        <input hidden id="questionType" value="@Model.Questions.QType" />
-                        <div class="row justify-content-center m-0">
+
+<style>
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+    }
+</style>
+@if (Model == null)
+{
+    <div id="notfound">
+        <div class="notfound">
+            <div class="notfound-404">
+                <h1>Oops!</h1>
+                <h2><div asp-validation-summary="All"></div></h2>
+            </div>
+            <a href="/">Go TO Homepage</a>
+        </div>
+    </div>
+}
+else
+{
+    <div class="row mt-1 justify-content-center" id="questionCard">
+        <div class="col-sm-12 col-md-9 col-lg-9 col-xl-6">
+            <div class="card my-2">
+                <img src="@Model.Questions.PhotoUrl" class="card-img-top" />
+                @switch (Model.Questions.QType)
+                {
+                    case 1:
+                        <div class="card-body">
+                            <p>@Model.Questions.Text</p>
+                            <input hidden id="questionId" value="@Model.Questions.Id" />
+                            <input hidden id="questionType" value="@Model.Questions.QType" />
+                            <div class="row justify-content-center m-0">
+                                @foreach (var opt in Model.Options)
+                                {
+                                    <div class="card col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 px-1 my-1 border-0 answers" name="option" id="@opt.Id">
+                                        <div class="image-hover img-zoom-out row imageDiv">
+                                            <img class="card-img-top" src="@opt.Photo" alt="">
+                                        </div>
+                                        <div class="card-body p-0">
+                                            <p class="card-text">@opt.Text</p>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <input id="type1and3MinSelect" hidden value="@Model.Questions.MinSelect">
+                        <input id="type1and3MaxSelect" hidden value="@Model.Questions.MaxSelect">
+                        break;
+                    case 2:
+                        <div class="card-body">
+                            <p>@Model.Questions.Text</p>
+                            <input hidden id="questionId" value="@Model.Questions.Id" />
+                            <input hidden id="questionType" value="@Model.Questions.QType" />
+                            <div class="row">
+                                <div class="col-6 sortableBoxes">
+                                    <span><b>Use These</b></span>
+                                    <ul class="list-group sortableImg mixedList mt-1" id="lhs">
+                                        @foreach (var opt in Model.Options)
+                                        {
+                                            <li class="card h-auto border-0 options p-1" Id="@opt.Id">
+                                                <img class="card-img-top" src="@opt.Photo" alt="">
+                                                <p class="card-text">@opt.Text</p>
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                                <div class="col-6 sortableBoxes">
+                                    <span><b>Move Here</b></span>
+                                    <ul class="list-group sortableImg resultList mt-1" id="rhs">
+                                    </ul>
+                                </div>
+                            </div>
+                            <input id="type2and4MinSelect" hidden value="@Model.Questions.QTypeMin">
+                            <input id="type2and4MaxSelect" hidden value="@Model.Questions.QTypeMax">
+                        </div>
+                        break;
+                    case 3:
+                        <div class="card-body">
+                            <p>@Model.Questions.Text</p>
+                            <input hidden id="questionId" value="@Model.Questions.Id" />
+                            <input hidden id="questionType" value="@Model.Questions.QType" />
                             @foreach (var opt in Model.Options)
                             {
-                                <div class="card col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 px-1 my-1 border-0 answers" name="option" id="@opt.Id">
-                                    <div class="image-hover img-zoom-out row imageDiv">
-                                        <img class="card-img-top" src="@opt.Photo" alt="">
-                                    </div>
-                                    <div class="card-body p-0">
-                                        <p class="card-text">@opt.Text</p>
-                                    </div>
+                                <div class="text-center m-2 p-2 answers text-hover text-zoom-out" name="option" id="@opt.Id">
+                                    @opt.Text
                                 </div>
                             }
                         </div>
-                    </div>
-                    <input id="type1and3MinSelect" hidden value="@Model.Questions.MinSelect">
-                    <input id="type1and3MaxSelect" hidden value="@Model.Questions.MaxSelect">
-                    break;
-                case 2:
-                    <div class="card-body">
-                        <p>@Model.Questions.Text</p>
-                        <input hidden id="questionId" value="@Model.Questions.Id" />
-                        <input hidden id="questionType" value="@Model.Questions.QType" />
-                        <div class="row">
-                            <div class="col-6 sortableBoxes">
-                                <span><b>Use These</b></span>
-                                <ul class="list-group sortableImg mixedList mt-1" id="lhs" >
-                                    @foreach (var opt in Model.Options)
-                                    {
-                                        <li class="card h-auto border-0 options p-1" Id="@opt.Id">
-                                            <img class="card-img-top" src="@opt.Photo" alt="">
-                                            <p class="card-text">@opt.Text</p>
-                                        </li>
-                                    }
-                                </ul>
-                            </div>
-                            <div class="col-6 sortableBoxes">
-                                <span><b>Move Here</b></span>
-                                <ul class="list-group sortableImg resultList mt-1" id="rhs">
-                                </ul>
+                        <input id="type1and3MinSelect" hidden value="@Model.Questions.MinSelect">
+                        <input id="type1and3MaxSelect" hidden value="@Model.Questions.MaxSelect">
+
+                        break;
+                    case 4:
+                        <div class="card-body">
+                            <p>@Model.Questions.Text</p>
+                            <input hidden id="questionId" value="@Model.Questions.Id" />
+                            <input hidden id="questionType" value="@Model.Questions.QType" />
+                            <div class="row">
+                                <div class="col-6 sortableBoxes">
+                                    <span><b>Use These</b></span>
+                                    <ul class="list-group sortableText mixedList mt-1" id="lhs">
+                                        @foreach (var opt in Model.Options)
+                                        {
+                                            <li class="list-group-item options h-auto" Id="@opt.Id">@opt.Text</li>
+                                        }
+                                    </ul>
+                                </div>
+                                <div class="col-6 sortableBoxes">
+                                    <span><b>Move Here</b></span>
+                                    <ul class="list-group sortableText resultList mt-1" id="rhs">
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                         <input id="type2and4MinSelect" hidden value="@Model.Questions.QTypeMin">
                         <input id="type2and4MaxSelect" hidden value="@Model.Questions.QTypeMax">
-                    </div>
-                    break;
-                case 3:
-                    <div class="card-body">
-                        <p>@Model.Questions.Text</p>
-                        <input hidden id="questionId" value="@Model.Questions.Id" />
-                        <input hidden id="questionType" value="@Model.Questions.QType" />
-                        @foreach (var opt in Model.Options)
-                        {
-                            <div class="text-center m-2 p-2 answers text-hover text-zoom-out" name="option" id="@opt.Id">
-                                @opt.Text
+                        break;
+                    case 5:
+                        <div class="card-body">
+                            <p>@Model.Questions.Text</p>
+                            <input hidden id="questionId" value="@Model.Questions.Id" />
+                            <input hidden id="questionType" value="@Model.Questions.QType" />
+                            <div class="range-slider">
+                                <input type="text" id="sliderValue" class="js-range-slider" value="" />
                             </div>
-                        }
-                    </div>
-                    <input id="type1and3MinSelect" hidden value="@Model.Questions.MinSelect">
-                    <input id="type1and3MaxSelect" hidden value="@Model.Questions.MaxSelect">
-
-                    break;
-                case 4:
-                    <div class="card-body">
-                        <p>@Model.Questions.Text</p>
-                        <input hidden id="questionId" value="@Model.Questions.Id" />
-                        <input hidden id="questionType" value="@Model.Questions.QType" />
-                        <div class="row">
-                            <div class="col-6 sortableBoxes">
-                                <span><b>Use These</b></span>
-                                <ul class="list-group sortableText mixedList mt-1" id="lhs">
-                                    @foreach (var opt in Model.Options)
-                                    {
-                                        <li class="list-group-item options h-auto" Id="@opt.Id">@opt.Text</li>
-                                    }
-                                </ul>
-                            </div>
-                            <div class="col-6 sortableBoxes">
-                                <span><b>Move Here</b></span>
-                                <ul class="list-group sortableText resultList mt-1" id="rhs">
-                                </ul>
+                            <br>
+                            <div class="input-group mb-1 extra-controls">
+                                <input type="text" id="slider-input" class="form-control js-input float-left col-9" placeholder="Or enter your choice" aria-describedby="basic-addon2" value="">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-info" id="enterInputChoiceBtn" type="button"><i class="fa fa-check" aria-hidden="true"></i> Apply</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <input id="type2and4MinSelect" hidden value="@Model.Questions.QTypeMin">
-                    <input id="type2and4MaxSelect" hidden value="@Model.Questions.QTypeMax">
-                    break;
-                case 5:
-                    <div class="card-body">
-                        <p>@Model.Questions.Text</p>
-                        <input hidden id="questionId" value="@Model.Questions.Id" />
-                        <input hidden id="questionType" value="@Model.Questions.QType" />
-                        <div class="range-slider">
-                            <input type="text" id="sliderValue" class="js-range-slider" value="" />
-                        </div>
-                        <br>
-                        <div class="input-group mb-1 extra-controls">
-                            <input type="text" id="slider-input" class="form-control js-input float-left col-9" placeholder="Or enter your choice" aria-describedby="basic-addon2" value="">
-                            <div class="input-group-append">
-                                <button class="btn btn-outline-info" id="enterInputChoiceBtn" type="button"><i class="fa fa-check" aria-hidden="true"></i> Apply</button>
-                            </div>
-                        </div>
-                    </div>
-                    <input id="type5MinSelect" hidden value="@Model.Questions.MinSelect">
-                    <input id="type5MaxSelect" hidden value="@Model.Questions.MaxSelect">
-                    <input id="type5Increment" hidden value="@Model.Questions.IncrementSelect">
-                    break;
-            }
-        </div>
-        <div class="" id="cardButtons">
-            <a class="btn btn-dark col-6 float-left skipQuestion" asp-area="" asp-controller="Questions" asp-action="Index">Skip</a>
-            <a class="btn btn-success col-6 float-left text-light sendOptions">Ok</a>
-        </div>
-        <div class="sticky-card-buttons fixed" id="stickyCardButtons">
-            <a class="btn btn-dark col-6 float-left skipQuestion" asp-area="" asp-controller="Questions" asp-action="Index">Skip</a>
-            <a class="btn btn-success col-6 float-left text-light sendOptions">Ok</a>
+                        <input id="type5MinSelect" hidden value="@Model.Questions.MinSelect">
+                        <input id="type5MaxSelect" hidden value="@Model.Questions.MaxSelect">
+                        <input id="type5Increment" hidden value="@Model.Questions.IncrementSelect">
+                        break;
+                }
+            </div>
+            <div class="" id="cardButtons">
+                <a class="btn btn-dark col-6 float-left skipQuestion" asp-area="" asp-controller="Questions" asp-action="Index">Skip</a>
+                <a class="btn btn-success col-6 float-left text-light sendOptions">Ok</a>
+            </div>
+            <div class="sticky-card-buttons fixed" id="stickyCardButtons">
+                <a class="btn btn-dark col-6 float-left skipQuestion" asp-area="" asp-controller="Questions" asp-action="Index">Skip</a>
+                <a class="btn btn-success col-6 float-left text-light sendOptions">Ok</a>
+            </div>
         </div>
     </div>
-</div>
+}
+
+
+

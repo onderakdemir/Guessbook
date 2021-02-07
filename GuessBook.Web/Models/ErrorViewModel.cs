@@ -1,5 +1,3 @@
-using System;
-
 namespace GuessBook.Web.Models
 {
     public class ErrorViewModel

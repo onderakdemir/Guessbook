@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace GuessBook.EF.Entities
+﻿namespace GuessBook.EF.Entities
 {
     public partial class Categories
     {

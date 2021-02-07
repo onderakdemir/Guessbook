@@ -3,18 +3,17 @@ using GuessBook.Business.Models;
 using GuessBook.Business.Shared;
 using GuessBook.EF.Context;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using GuessBook.EF.Entities;
 
 namespace GuessBook.Business.Managers
 {
     public interface IQuestionsService
     {
-        Task<ApplicationResult<QuestionsDto>> GetQuestionAsync(string userId);
+        Task<ApplicationResult<QuestionsDto>> GetQuestionAsync(string userId, int questionId);
         Task<ApplicationResult<QuestionsDto>> GetQuestionByIdAsync(int questionId);
         Task<ApplicationResult<List<QuestionsDto>>> GetAllQuestionByUserIdAsync(string userId, int qType);
     }
@@ -37,13 +36,13 @@ namespace GuessBook.Business.Managers
 
                 var userAnsweredQuestionIds = await _context.MemberAnswer.Where(c => c.MemberId == userId).Select(i => i.QuestionId).ToListAsync();
 
-                var query =  _context.Questions.Where(c => userAnsweredQuestionIds.Contains(c.Id));
+                var query = _context.Questions.Where(c => userAnsweredQuestionIds.Contains(c.Id));
                 if (qType != 0)
                 {
                     query = query.Where(c => c.QType == qType);
 
                 }
-                var questions =await query.ToListAsync();
+                var questions = await query.ToListAsync();
 
                 return new ApplicationResult<List<QuestionsDto>>
                 {
@@ -61,17 +60,30 @@ namespace GuessBook.Business.Managers
             }
         }
 
-        public async Task<ApplicationResult<QuestionsDto>> GetQuestionAsync(string userId)
+        public async Task<ApplicationResult<QuestionsDto>> GetQuestionAsync(string userId, int questionId)
         {
             try
             {
-                var total = _context.Questions.Count();
-                var offset = new Random().Next(0, total);
-
                 var userAnsweredQuestionIds = await _context.MemberAnswer.Where(c => c.MemberId == userId).Select(i => i.QuestionId).ToListAsync();
 
-                var questions = await _context.Questions.Skip(offset)
-                    .FirstOrDefaultAsync(x => !userAnsweredQuestionIds.Contains(x.Id));
+                if (questionId != 0)
+                {
+                    return await GetQuestionByIdAsync(questionId);
+                }
+
+                var total = _context.Questions.Count();
+                Questions questions;
+                do
+                {
+                    var offset = new Random().Next(0, total);
+               
+                    questions = await _context.Questions.Skip(offset).Where(c=>c.Active==true).FirstOrDefaultAsync();
+             
+                    if (questions != null && userAnsweredQuestionIds.Contains(questions.Id))
+                    {
+                        questions = null;
+                    }
+                } while (questions == null);
 
                 return new ApplicationResult<QuestionsDto>
                 {

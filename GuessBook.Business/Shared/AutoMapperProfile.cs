@@ -2,8 +2,6 @@
 using GuessBook.Business.Models;
 using GuessBook.EF.Entities;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace GuessBook.Business.Shared
 {

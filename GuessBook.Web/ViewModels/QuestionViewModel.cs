@@ -1,9 +1,5 @@
 ﻿using GuessBook.Business.Models;
-using GuessBook.EF.Entities;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace GuessBook.Web.ViewModels
 {

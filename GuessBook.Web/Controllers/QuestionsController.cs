@@ -1,19 +1,16 @@
 ﻿using System;
 using System.Linq;
-using System.Threading.Tasks;
 using GuessBook.EF.Context;
 using GuessBook.Business.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using GuessBook.Business.Managers;
-using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace GuessBook.Web.Controllers
 {
-    [Authorize]
     public class QuestionsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -30,6 +27,7 @@ namespace GuessBook.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public IActionResult SaveOptions([FromBody] MemberAnswersDto model)
         {
             try

@@ -1,0 +1,88 @@
+﻿
+ul.resultList {
+    border: 2px dashed green;
+    min-height: 90%;
+    cursor: pointer;
+}
+
+ul.mixedList {
+    border: 2px dashed purple;
+    min-height: 90%;
+    cursor: pointer;
+}
+
+ul.sortableText, ul.grid {
+    list-style-type: none;
+    padding: 0;
+}
+
+    /*ul.grid.wide {
+        height: 50px;
+    }*/
+
+    ul.grid.active {
+        background-color: #abe2a5;
+    }
+
+    ul.sortableText li, ul.grid li {
+        border: 3px solid #808080;
+        margin: 1px;
+        padding: 1px 1px;
+        /*background-color: #F6F5F7;*/
+        box-sizing: border-box;
+        vertical-align: top;
+    }
+
+ul.sortableText li {
+    height: 30px;
+}
+
+
+ul.grid li {
+    float: left;
+    height: 50px;
+}
+
+    ul.sortableText li.placeholder, ul.grid li.placeholder {
+        border-style: dashed;
+        background-color: transparent;
+    }
+
+div.sortableBoxes {
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
+
+
+ul.sortableImg, ul.grid {
+    list-style-type: none;
+    padding: 0;
+}
+
+ul.sortableImg li, ul.grid li {
+    /*border: 2px solid #DCDBDD;*/
+    border: 5px solid #808080;
+    margin: 1px;
+    padding: 1px 1px;
+    /*background-color: #F6F5F7;*/
+    box-sizing: border-box;
+    vertical-align: top;
+}
+
+@media (min-width: 768px) {
+    ul.sortableImg li {
+        height: 150px;
+    }
+}
+
+@media (max-width: 768px) {
+    ul.sortableImg li {
+        height: 100px;
+    }
+}
+ul.sortableImg li.placeholder, ul.grid li.placeholder {
+    border-style: dashed;
+    background-color: transparent;
+}
+

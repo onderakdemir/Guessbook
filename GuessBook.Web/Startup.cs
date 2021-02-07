@@ -1,8 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+using AutoMapper;
+using GuessBook.Business.Managers;
+using GuessBook.Business.Shared;
 using AutoMapper;
 using GuessBook.Business.Managers;
 using GuessBook.Business.Shared;
@@ -12,7 +12,6 @@ using GuessBook.Web.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -39,12 +38,14 @@ namespace GuessBook.Web
             services.AddRazorPages();
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("GuessBookDb")));
+            
             //services.AddDefaultIdentity<ApplicationUser>()
             //    .AddEntityFrameworkStores<ApplicationDbContext>()
             //    .AddDefaultTokenProviders();
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
 
             //services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>,
             //    AdditionalUserClaimsPrincipalFactory>();

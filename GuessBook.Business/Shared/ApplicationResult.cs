@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace GuessBook.Business.Shared
+﻿namespace GuessBook.Business.Shared
 {
     public class ApplicationResult<T> : BaseApplicationResult
     {
