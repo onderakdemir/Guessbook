@@ -109,7 +109,7 @@ namespace GuessBook.Web
             IMapper mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);
 
-            services.AddTransient<IEmailSender, EmailSender>(i =>
+            services.AddSingleton<IEmailSender, EmailSender>(i =>
             new EmailSender(
             Configuration["EmailSender:Host"],
             Configuration.GetValue<int>("EmailSender:Port"),
@@ -143,6 +143,15 @@ namespace GuessBook.Web
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            app.Use(async (context, next) =>
+            {
+                await next();
+                if (context.Response.StatusCode == 404)
+                {
+                    context.Request.Path = "/Home/NotFound";
+                    await next();
+                }
+            });
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
@@ -156,7 +165,7 @@ namespace GuessBook.Web
 
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Questions}/{action=Index}/{id?}");
             });
 
         }

@@ -8,17 +8,18 @@ using GuessBook.Business.Managers;
 using System.Security.Claims;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace GuessBook.Web.Controllers
 {
     public class QuestionsController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IQuestionsService _questionsService;
         private readonly IOptionsService _optionsService;
 
-        public QuestionsController(ApplicationDbContext context, IOptionsService optionsService)
+        public QuestionsController(IQuestionsService questionsService, IOptionsService optionsService)
         {
-            _context = context;
+            _questionsService = questionsService;
             _optionsService = optionsService;
         }
         public IActionResult Index()
@@ -28,13 +29,15 @@ namespace GuessBook.Web.Controllers
 
         [HttpPost]
         [Authorize]
-        public IActionResult SaveOptions([FromBody] MemberAnswersDto model)
+        public async Task<IActionResult> SaveOptionsAsync([FromBody] MemberAnswersDto model)
         {
             try
             {
                 if (!ModelState.IsValid) throw new Exception("Model state is not valid!");
 
-                var question = _context.Questions.FirstOrDefault(c => c.Id == model.QuestionId);
+                var question = (await _questionsService.GetQuestionByIdAsync(model.QuestionId)).ValueResult;
+                if (question == null) throw new Exception("Something went wrong!");
+
                 var optionIds = JsonConvert.DeserializeObject<List<string>>(model.OptionIds);
                 var count = optionIds.Count;
 
